@@ -61,7 +61,7 @@ Before you begin, ensure that you have the following installed on your local mac
    - Log in to [GitHub](https://github.com/) and create a new repository.
    - Clone the repository to your local machine:
      ```bash
-     git clone https://github.com/your-username/your-repository.git
+     git clone https://github.com/michaeadi/Michael22082024.git
      ```
 
 2. **Add Your Project Files:**
