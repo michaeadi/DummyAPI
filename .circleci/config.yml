@@ -1,21 +1,20 @@
 version: 2.1
 
 jobs:
-  newman-tests:
+  build:
     docker:
-      - image: postman/newman_alpine33
+      - image: circleci/node:14  # or use a newer version like circleci/node:16
     steps:
       - checkout
       - run:
-          name: Install Dependencies
-          command: |
-            apk add --no-cache nodejs npm
+          name: Install dependencies
+          command: npm install
       - run:
-          name: Run Postman Collection with Newman
-          command: |
-            newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
+          name: Run tests
+          command: npm test
+
 workflows:
   version: 2
-  test:
+  build:
     jobs:
-      - newman-tests
+      - build
