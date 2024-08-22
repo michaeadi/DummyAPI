@@ -7,11 +7,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Newman Locally
-          command: npm install newman  # Install Newman locally in the project directory
-      - run:
-          name: Run Newman Tests
-          command: ./node_modules/.bin/newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
+          name: Run Newman Tests with NPX
+          command: npx newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
 
 workflows:
   version: 2
