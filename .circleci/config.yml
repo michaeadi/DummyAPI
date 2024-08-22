@@ -3,18 +3,23 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:16  # Use Node.js 16 or higher to match Newman requirements
+      - image: circleci/node:16  # Use Node.js 16 or higher
     steps:
       - checkout
       - run:
-          name: Install Newman
-          command: npm install newman  # Install Newman locally in the project directory
+          name: Install Newman Globally
+          command: |
+            npm install -g newman
+            echo 'export PATH=$PATH:/usr/local/bin' >> $BASH_ENV
+            source $BASH_ENV
       - run:
-          name: Add Newman to PATH
-          command: export PATH=$(npm bin):$PATH  # Add npm bin to PATH
+          name: Verify Newman Installation
+          command: |
+            newman -v  # Check if Newman is installed
       - run:
           name: Run Newman Tests
-          command: newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
+          command: |
+            newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
 
 workflows:
   version: 2
