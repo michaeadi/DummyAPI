@@ -1,4 +1,4 @@
-Here’s a README documentation that outlines the process of writing test cases, setting up GitHub, and integrating with CircleCI for continuous integration:
+Here’s a README documentation that outlines the process of writing test cases, setting up GitHub, and integrating with CircleCI for continuous integration Using the Dummy API:
 
 ---
 
