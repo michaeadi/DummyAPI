@@ -8,9 +8,9 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: npm install
+          command: npm install -g newman  # Install Newman globally
       - run:
-          name: Run tests
+          name: Run Newman Tests
           command: newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
 
 workflows:
