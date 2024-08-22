@@ -8,7 +8,10 @@ jobs:
       - checkout
       - run:
           name: Install Newman
-          command: npm install -g newman  # Install Newman globally in the CircleCI environment
+          command: npm install newman  # Install Newman locally in the project directory
+      - run:
+          name: Add Newman to PATH
+          command: export PATH=$(npm bin):$PATH  # Add npm bin to PATH
       - run:
           name: Run Newman Tests
           command: newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
