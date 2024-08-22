@@ -7,19 +7,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Newman Globally
-          command: |
-            npm install -g newman
-            echo 'export PATH=$PATH:/usr/local/bin' >> $BASH_ENV
-            source $BASH_ENV
-      - run:
-          name: Verify Newman Installation
-          command: |
-            newman -v  # Check if Newman is installed
+          name: Install Newman Locally
+          command: npm install newman  # Install Newman locally in the project directory
       - run:
           name: Run Newman Tests
-          command: |
-            newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
+          command: ./node_modules/.bin/newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
 
 workflows:
   version: 2
