@@ -1,0 +1,1522 @@
+{
+	"info": {
+		"_postman_id": "6c8979d1-8e7d-4f58-9921-577544330958",
+		"name": "Dummy Rest API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3862417",
+		"_collection_link": "https://galactic-trinity-38571.postman.co/workspace/My-Workspace~d7decb96-9a07-42cd-87f5-09497ba806d1/collection/3862417-6c8979d1-8e7d-4f58-9921-577544330958?action=share&source=collection_link&creator=3862417"
+	},
+	"item": [
+		{
+			"name": "Create Employee successfully",
+			"item": [
+				{
+					"name": "Create Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check if the status code is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has the correct structure\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    ",
+									"    pm.expect(jsonData).to.have.property(\"status\");",
+									"    pm.expect(jsonData).to.have.property(\"data\");",
+									"    pm.expect(jsonData).to.have.property(\"message\");",
+									"    ",
+									"    pm.expect(jsonData.data).to.have.property(\"status\");",
+									"    pm.expect(jsonData.data).to.have.property(\"data\");",
+									"    pm.expect(jsonData.data).to.have.property(\"id\");",
+									"    ",
+									"    pm.expect(jsonData.data.data).to.have.property(\"name\");",
+									"    pm.expect(jsonData.data.data).to.have.property(\"salary\");",
+									"    pm.expect(jsonData.data.data).to.have.property(\"age\");",
+									"    pm.expect(jsonData.data.data).to.have.property(\"id\");",
+									"});",
+									"",
+									"pm.test(\"Status is success\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"success\");",
+									"    pm.expect(jsonData.data.status).to.eql(\"success\");",
+									"});",
+									"",
+									"pm.test(\"Message is correct\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Successfully! Record has been added.\");",
+									"});",
+									"",
+									"pm.test(\"Nested data ID is correct\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestId = pm.environment.get(\"request_id\");",
+									"    pm.expect(jsonData.data.data.id).to.eql(requestId);",
+									"});",
+									"",
+									"pm.test(\"Top-level ID is present\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.id).to.be.a('number');",
+									"});",
+									"",
+									"pm.test(\"Name, salary, and age are correct\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestName = pm.environment.get(\"request_name\");",
+									"    const requestSalary = pm.environment.get(\"request_salary\");",
+									"    const requestAge = pm.environment.get(\"request_age\");",
+									"",
+									"    pm.expect(jsonData.data.data.name).to.eql(requestName);",
+									"    pm.expect(jsonData.data.data.salary).to.eql(requestSalary);",
+									"    pm.expect(jsonData.data.data.age).to.eql(requestAge);",
+									"});",
+									"",
+									"pm.test(\"Salary is a valid number\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(parseInt(jsonData.data.data.salary)).to.be.a('number');",
+									"});",
+									"",
+									"pm.test(\"Name is a string\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.data.name).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Age is within the expected range\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const age = parseInt(jsonData.data.data.age);",
+									"    pm.expect(age).to.be.within(18, 65);",
+									"});",
+									"",
+									"pm.test(\"No unexpected fields in the response\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    ",
+									"    const topLevelKeys = [\"status\", \"data\", \"message\"];",
+									"    const dataLevelKeys = [\"status\", \"data\", \"id\"];",
+									"    const nestedDataKeys = [\"name\", \"salary\", \"age\", \"id\"];",
+									"    ",
+									"    pm.expect(Object.keys(jsonData)).to.have.members(topLevelKeys);",
+									"    pm.expect(Object.keys(jsonData.data)).to.have.members(dataLevelKeys);",
+									"    pm.expect(Object.keys(jsonData.data.data)).to.have.members(nestedDataKeys);",
+									"});",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generating dynamic values for name, salary, and age",
+									"const randomName = `Name_${Math.floor(Math.random() * 1000)}`;",
+									"const randomSalary = `${Math.floor(Math.random() * 1000000) + 50000}`;",
+									"const randomAge = `${Math.floor(Math.random() * 50) + 20}`;",
+									"let lastId = pm.environment.get(\"lastId\");",
+									"if (!lastId) {",
+									"    lastId = 25;",
+									"}",
+									"const newId = parseInt(lastId) + 1;",
+									"pm.environment.set(\"lastId\", newId);",
+									"const requestData = {",
+									"    \"status\": \"success\",",
+									"    \"data\": {",
+									"        \"name\": randomName,",
+									"        \"salary\": randomSalary,",
+									"        \"age\": randomAge,",
+									"        \"id\": newId",
+									"    }",
+									"};",
+									"",
+									"pm.environment.set(\"request_id\", newId);",
+									"pm.environment.set(\"request_name\", randomName);",
+									"pm.environment.set(\"request_salary\", randomSalary);",
+									"pm.environment.set(\"request_age\", randomAge);",
+									"",
+									"pm.request.body.raw = JSON.stringify(requestData);",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"{{randomName}}\",\n        \"salary\": \"{{randonSalary}}\",\n        \"age\": \"{{randomAge}}\",\n        \"id\": {{newId}}\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Employee with same ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Status is failure\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"failure\");",
+							"    pm.expect(jsonData.data.status).to.eql(\"failure\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee without name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Missing Employee Name\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"salary\": \"1230999\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee without Salary",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Missing Employee Salary\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee without age",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Missing Employee Age\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee without ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Missing Employee ID\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"52\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with a non-numeric string",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee salary should be numeric\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"test\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with negative age",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee Age should be greater than 17 years\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"-52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with negative id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee ID should be greater than 0\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"52\",\n        \"id\": -25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with negative salary",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee Salary should be above 10000\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"-1\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with Invalid JSON structure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"52\",\n        \"id\": 25,,,,,\n    },,,,\n},",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with no Request Body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with Min Age Value",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has the correct structure\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    ",
+							"    pm.expect(jsonData).to.have.property(\"status\");",
+							"    pm.expect(jsonData).to.have.property(\"data\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"    ",
+							"    pm.expect(jsonData.data).to.have.property(\"status\");",
+							"    pm.expect(jsonData.data).to.have.property(\"data\");",
+							"    pm.expect(jsonData.data).to.have.property(\"id\");",
+							"    ",
+							"    pm.expect(jsonData.data.data).to.have.property(\"name\");",
+							"    pm.expect(jsonData.data.data).to.have.property(\"salary\");",
+							"    pm.expect(jsonData.data.data).to.have.property(\"age\");",
+							"    pm.expect(jsonData.data.data).to.have.property(\"id\");",
+							"});",
+							"",
+							"pm.test(\"Status is success\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"    pm.expect(jsonData.data.status).to.eql(\"success\");",
+							"});",
+							"",
+							"pm.test(\"Message is correct\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully! Record has been added.\");",
+							"});",
+							"",
+							"pm.test(\"Employee age is at least the minimum valid age\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    const age = parseInt(jsonData.data.data.age);",
+							"    pm.expect(age).to.be.at.least(18);",
+							"});",
+							"",
+							"pm.test(\"ID is correctly generated\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data.data.id).to.be.a('number');",
+							"    pm.expect(jsonData.data.id).to.be.a('number');",
+							"});",
+							"",
+							"pm.test(\"Name, salary, and age match the request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data.data.name).to.eql(\"Sample Name\");",
+							"    pm.expect(jsonData.data.data.salary).to.eql(\"1230999\");",
+							"    pm.expect(jsonData.data.data.age).to.eql(\"18\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"18\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with Min Age just below valid age",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Message returns bad request\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee Age should be greater than 17 years\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"17\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee with HTTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Only HTTPS is accepted\", function () {",
+							"    const url = pm.request.url.toString();",
+							"    if (url.startsWith(\"https://\")) {",
+							"        pm.expect(url.startsWith(\"https://\")).to.be.true;",
+							"    } else {",
+							"        pm.test(\"HTTP requests are not allowed\", function () {",
+							"            pm.response.to.have.status(400);",
+							"            pm.expect(pm.response.text()).to.include(\"Error: Only HTTPS requests are accepted\");",
+							"        });",
+							"    }",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"success\",\n    \"data\": {\n        \"name\": \"Sample Name\",\n        \"salary\": \"1230999\",\n        \"age\": \"52\",\n        \"id\": 25\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/create",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch all Employees",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has the correct structure\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"status\");",
+							"    pm.expect(jsonData).to.have.property(\"data\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"",
+							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully! All records has been fetched.\");",
+							"});",
+							"",
+							"pm.test(\"Validate employee records\", function () {",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    jsonData.data.forEach(function (employee) {",
+							"        pm.expect(employee).to.have.property(\"id\").that.is.a(\"number\");",
+							"        pm.expect(employee).to.have.property(\"employee_name\").that.is.a(\"string\");",
+							"        pm.expect(employee).to.have.property(\"employee_salary\").that.is.a(\"number\");",
+							"        pm.expect(employee).to.have.property(\"employee_age\").that.is.a(\"number\");",
+							"        pm.expect(employee).to.have.property(\"profile_image\").that.is.a(\"string\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Employee ages are within valid range\", function () {",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    jsonData.data.forEach(function (employee) {",
+							"        pm.expect(employee.employee_age).to.be.within(18, 65);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Employee salary is a positive number\", function () {",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    jsonData.data.forEach(function (employee) {",
+							"        pm.expect(employee.employee_salary).to.be.above(0);",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"Employee names are non-empty strings\", function () {",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    jsonData.data.forEach(function (employee) {",
+							"        pm.expect(employee.employee_name).to.be.a(\"string\").that.is.not.empty;",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"All IDs are unique\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    const ids = jsonData.data.map(employee => employee.id);",
+							"",
+							"    const uniqueIds = [...new Set(ids)];",
+							"    pm.expect(ids.length).to.eql(uniqueIds.length);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch all Employees with HTTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Only HTTPS is accepted\", function () {",
+							"    const url = pm.request.url.toString();",
+							"    if (url.startsWith(\"https://\")) {",
+							"        pm.expect(url.startsWith(\"https://\")).to.be.true;",
+							"    } else {",
+							"        pm.test(\"HTTP requests are not allowed\", function () {",
+							"            pm.response.to.have.status(400);",
+							"            pm.expect(pm.response.text()).to.include(\"Error: Only HTTPS requests are accepted\");",
+							"        });",
+							"    }",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch one Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Status is success\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"});",
+							"",
+							"pm.test(\"Response has the correct structure\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"status\");",
+							"    pm.expect(jsonData).to.have.property(\"data\");",
+							"    pm.expect(jsonData).to.have.property(\"message\");",
+							"",
+							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully! Record has been fetched.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees/20",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch one Employee ID that does not exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Error message should be returned\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee ID does not exist\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees/0",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch one Employee with incorrect API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Error message should be returned\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Error Occured! Page Not found, contact rstapi2example@gmail.com\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employeess/20",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employeess",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch one Employee with Non-numeric ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Error message should be returned\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Employee ID is invalid\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees/ae",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees",
+						"ae"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch one Employee with HTTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Only HTTPS is accepted\", function () {",
+							"    const url = pm.request.url.toString();",
+							"    if (url.startsWith(\"https://\")) {",
+							"        pm.expect(url.startsWith(\"https://\")).to.be.true;",
+							"    } else {",
+							"        pm.test(\"HTTP requests are not allowed\", function () {",
+							"            pm.response.to.have.status(400);",
+							"            pm.expect(pm.response.text()).to.include(\"Error: Only HTTPS requests are accepted\");",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://dummy.restapiexample.com/api/v1/employees/20",
+					"protocol": "http",
+					"host": [
+						"dummy",
+						"restapiexample",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"employees",
+						"20"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
