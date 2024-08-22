@@ -7,8 +7,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run Newman Tests with NPX
-          command: npx newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
+          name: Install Newman Locally
+          command: npm install --prefix ~/.local newman
+      - run:
+          name: Add Newman to PATH
+          command: echo 'export PATH=~/.local/node_modules/.bin:$PATH' >> $BASH_ENV && source $BASH_ENV
+      - run:
+          name: Run Newman Tests
+          command: newman run "DummyAPI/Dummy Rest API.postman_collection.json" -e "DummyAPI/Dummy Rest API Env.postman_environment.json"
 
 workflows:
   version: 2
